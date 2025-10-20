@@ -28,10 +28,10 @@ int game_turn(); //how game turn takes place
 int init_characters(player *pv, dragon *Pv){
     printf("Quelle est ton nom ?(Max 15 lettres, pas d'espaces) ");
     scanf("%s", pv->name);
-    pv->player_life = 100;
-    pv->Max_Hp = 100;
-    Pv->dragon_life = 100;
-    Pv->MaxHp = 100;
+    pv->player_life = 20;
+    pv->Max_Hp = 20;
+    Pv->dragon_life = 20;
+    Pv->MaxHp = 20;
 }
 int display_player(player *pv){
     printf("Joueur\nname : %s\n", pv->name);
@@ -66,13 +66,14 @@ int init_turn(dragon *Pv, player *pv){
     if(pv->player_roll > Pv->dragon_roll){
         printf("\n%s attaque Dialga de %d dégats\n", pv->name, pv->player_roll);
         Pv->dragon_life -= pv->player_roll;
+        player_attack(Pv, pv);
     } else if (pv->player_roll < Pv->dragon_roll){
-        printf("\nDialga attaque de %d\n dégats\n", Pv->dragon_roll);
+        printf("\nDialga attaque de %d dégats\n", Pv->dragon_roll);
         pv->player_life -= Pv->dragon_roll;
+        player_attack(Pv, pv);
     }
 }
 int player_attack(dragon *Pv, player *pv){
-    init_turn(Pv, pv);
     printf("Joueur\nname : %s\n", pv->name);
     printf("Hp : %d/100\n", pv->player_life);
     printf("\nDialga\n");
@@ -81,7 +82,6 @@ int player_attack(dragon *Pv, player *pv){
     return Pv->dragon_life;
 }
 int dragon_attack(player *pv, dragon *Pv){
-    init_turn(Pv, pv);
     printf("Joueur\nname : %s\n", pv->name);
     printf("Hp : %d/100\n", pv->player_life);
     printf("\nDialga\n");
@@ -91,8 +91,7 @@ int dragon_attack(player *pv, dragon *Pv){
 }
 int game_turn(dragon *Pv, player *pv){
     while(pv->player_life > 0 && Pv->dragon_life > 0) {
-        player_attack(Pv, pv);
-        dragon_attack(pv, Pv);
+        init_turn(Pv, pv);
     }
     if (pv->player_life <= 0) {
             printf("Vous avez perdu\n");
